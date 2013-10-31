@@ -297,12 +297,12 @@
 				case SIDES.right:
 					/* str... */
 					return utils.eatStr.cache[key] =
-							$.trim(str.substr(0, length - bite_size)) + fill;
+							utils.trimHTML($.trim(str.substr(0, length - bite_size))) + fill;
 					
 				case SIDES.left:
 					/* ...str */
 					return utils.eatStr.cache[key] =
-							fill + $.trim(str.substr(bite_size));
+							fill + utils.trimHTML($.trim(str.substr(bite_size)));
 					
 				case SIDES.center:
 					/* Bit-shift to the right by one === Math.floor(x / 2) */
@@ -311,13 +311,18 @@
 
 					/* st...r */
 					return utils.eatStr.cache[key] =
-							$.trim(utils.eatStr(str.substr(0, length - half_length), SIDES.right, bite_size - half_bite_size, '')) +
+							utils.trimHTML($.trim(utils.eatStr(str.substr(0, length - half_length), SIDES.right, bite_size - half_bite_size, ''))) +
 							fill +
-							$.trim(utils.eatStr(str.substr(length - half_length), SIDES.left, half_bite_size, ''));
+							utils.trimHTML($.trim(utils.eatStr(str.substr(length - half_length), SIDES.left, half_bite_size, '')));
 					
 				default:
 					$.error('Invalid side "' + side + '".');
 			}
+		},
+
+		trimHTML: function(bite) {
+			var html = $.parseHTML(bite); // close html tags
+			return $(html).clone().wrap('<div/>').parent().html();
 		},
 		
 		getLineHeight: function (elem) {
